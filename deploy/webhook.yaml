@@ -1,4 +1,4 @@
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: mutating-webhook-configuration
@@ -7,6 +7,8 @@ metadata:
     app: kustomize-webhook
 webhooks:
   - name: kustomize.webhook.com
+    admissionReviewVersions:
+    - v1beta1
     clientConfig:
       service:
         name: kustomize-webhook
@@ -71,8 +73,8 @@ spec:
         app: kustomize-webhook
     spec:
       containers:
-      - image: docker.pkg.github.com/sbueringer/kustomize-webhook/webhook:latest
-        imagePullPolicy: Always
+      - image: ghcr.io/sbueringer/kustomize-webhook/webhook:0a71bcdf8225c840a55369845d355bb7478ea438
+        imagePullPolicy: IfNotPresent
         args:
         - --patches-glob
         - "/tmp/patches/patch-*.yaml"
