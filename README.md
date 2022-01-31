@@ -8,15 +8,20 @@ A MutatingWebhook for Kubernetes based on Kustomize.
 ## Summary
 
 The kustomize-webhook is a MutatingWebhook which applies kustomize patches to Pods. The MutatingWebhook receives
-the Pod resource which is then patches via a kustomize patch. The patch itself is generated via go template with the 
+the Pod resource which is then patches via a kustomize patch. The patch itself is generated via go template with the
 Pod as data.
 
-## Deployment 
+## Deployment
 
 An example deployment can be found in the deploy folder. Generate certs, e.g. via:
 
+Make sure to use at least version 1.1 of openssl. Requires `-addext` flag.
+
 ```bash
-openssl req -x509 -newkey rsa:2048 -keyout tls.key -out tls.crt -days 365 -nodes -subj "/CN=kustomize-webhook.default.svc"
+openssl req \
+    -x509 -newkey rsa:2048 -keyout tls.key -out tls.crt -days 365 -nodes \
+    -subj "/CN=kustomize-webhook.default.svc" \
+    -addext "subjectAltName = DNS:kustomize-webhook.default.svc"
 ```
 
 Replace the  following vars in [deploy/webhook.yaml](deploy/webhook.yaml):
